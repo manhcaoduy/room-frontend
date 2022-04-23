@@ -43,10 +43,14 @@ class AuthService {
     return { accessToken, refreshToken };
   }
 
-  public async getProfile(): Promise<UserNamespace.Info> {
-    const res = await http.post('/auth/me', {});
-    const profile = parseUserData(Object(res.data).user);
-    return profile;
+  public async getProfile(): Promise<UserNamespace.Info | undefined> {
+    try {
+      const res = await http.post('/auth/me', {});
+      const profile = parseUserData(Object(res.data).user);
+      return profile;
+    } catch (error) {
+      return undefined;
+    }
   }
 }
 
