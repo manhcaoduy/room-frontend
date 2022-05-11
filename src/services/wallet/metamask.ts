@@ -19,10 +19,7 @@ import {
   UploadItemRequest,
   UploadItemResponse,
 } from "./metamask.dto";
-
-// todo: remove this hardcore
-const NFTContractAddress = "0xd7F9F54960c4C7Bb47D682c9Aaa3618A13778A35";
-const MarketContractAddress = "0x98349e265044377864569CCaE2d4E514Ff7592A0";
+import { MarketContractAddress, NFTContractAddress } from "./metamask.constant";
 
 export default class MetamaskWalletService {
   private static instance?: MetamaskWalletService;
