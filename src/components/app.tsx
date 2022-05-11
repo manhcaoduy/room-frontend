@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthService from '../lib/api/auth';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../services/api/auth/auth";
 
 export default function App(): JSX.Element {
-  const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     AuthService.getInstance()
       .getProfile()
       .then((profile) => {
-        if (profile) {
-          setEmail(profile.email);
+        if (!profile) {
+          navigate("/login");
         } else {
-          navigate('/login');
+          navigate("/marketplace");
         }
       });
-  }, []);
+  });
 
-  return (
-    <>
-      <h1>Welcome {email}</h1>
-    </>
-  );
+  return <></>;
 }
