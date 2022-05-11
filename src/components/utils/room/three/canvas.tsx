@@ -6,7 +6,13 @@ import Controls from "./controls";
 import Painting from "./painting";
 import Gallery from "./gallery";
 
-const IndexPage = (): JSX.Element => {
+interface Props {
+  itemUrls: string[];
+}
+
+const IndexPage = (props: Props): JSX.Element => {
+  const { itemUrls } = props;
+
   const [floor, setFloor] = useState<Mesh>();
 
   return (
@@ -15,7 +21,13 @@ const IndexPage = (): JSX.Element => {
         <ambientLight />
         <Suspense fallback={null}>
           <Controls floor={floor} />
-          <Painting name="samodiva" />
+          {itemUrls.map((itemUrl, index) => {
+            return (
+              <>
+                <Painting url={itemUrl} id={index} />
+              </>
+            );
+          })}
           <Gallery setFloor={setFloor} />
           <Preload all />
         </Suspense>

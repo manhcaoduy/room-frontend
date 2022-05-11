@@ -13,6 +13,7 @@ import MetamaskWalletService from "../../../services/wallet/metamask";
 import ActionService from "../../../services/api/action/action";
 import { ActionType } from "../../../services/api/action/action.dto";
 import EthSvg from "../../../resources/svg/eth.svg";
+import Popup from "../../utils/popup/popup";
 import {
   BuyItemResponse,
   CancelItemResponse,
@@ -48,6 +49,8 @@ export default function Item(): JSX.Element {
 
   const [isDetail, setIsDetail] = useState<boolean>(true);
   const [metadataIpfs, setMetadataIpfs] = useState<string>("");
+
+  const [isPopup, setIsPopup] = useState<boolean>(false);
 
   async function initData(): Promise<void> {
     const profile = await AuthService.getInstance().getProfile();
@@ -155,16 +158,14 @@ export default function Item(): JSX.Element {
     });
   }
 
-  function handleEnable(): void {
-    //todo: remove this hardcore
-    const price = 1;
-    MetamaskWalletService.getInstance()
-      .enableSellingItem({ price, tokenId })
-      .then((resp) => {
-        updateEnableToDB(resp).then(() => {
-          window.location.reload();
-        });
-      });
+  async function handleEnable(price: number): Promise<void> {
+    const resp = await MetamaskWalletService.getInstance().enableSellingItem({
+      price,
+      tokenId,
+    });
+    await updateEnableToDB(resp).then(() => {
+      window.location.reload();
+    });
   }
 
   async function updateCancelToDB({
@@ -361,7 +362,8 @@ export default function Item(): JSX.Element {
                         align-middle outline-offset-2 outline-2 w-full leading-5 rounded-xl font-semibold transition
                         h-12 min-w-12 text-lg px-6 bg-green-500 text-white hover:bg-green-700"
                                 onClick={(): void => {
-                                  handleEnable();
+                                  // handleEnable();
+                                  setIsPopup(true);
                                 }}
                               >
                                 Sell this Item
@@ -531,6 +533,11 @@ export default function Item(): JSX.Element {
               </div>
             </div>
           </div>
+          <Popup
+            isOpen={isPopup}
+            setIsOpen={setIsPopup}
+            handleEnable={handleEnable}
+          />
         </>
       )}
     </>
